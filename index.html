@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xhipment · IN→US Pricing</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f4f5f8;--white:#fff;--ink:#0d0f1a;--ink2:#3d4155;--ink3:#8a8fa8;
+  --line:#e0e3ee;--line2:#eceef5;
+  --green:#0a8a5c;--gbg:#edfaf4;
+  --amber:#b45309;--abg:#fffbeb;
+  --red:#c0392b;
+  --blue:#1d4ed8;--bbg:#eff6ff;
+  --accent:#1a1d2e;--accent2:#252841;
+  --sans:'IBM Plex Sans',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --r:5px;--r2:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:13px;line-height:1.5}
+
+header{background:var(--accent);height:48px;display:flex;align-items:center;padding:0 28px;gap:16px;position:sticky;top:0;z-index:50}
+.logo{font-size:14px;font-weight:600;color:#fff}.logo em{color:#60a5fa;font-style:normal}
+.route{font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.12);padding:2px 10px;border-radius:20px;letter-spacing:.05em}
+.sp{flex:1}
+
+.page{max-width:1260px;margin:0 auto;padding:20px 20px 60px}
+
+/* MARKET BAR */
+.mbar{background:var(--accent2);border-radius:var(--r2);padding:18px 22px;margin-bottom:18px}
+.mbar-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+.minputs{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.mf label{font-size:10px;font-weight:500;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px}
+.cur{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle}
+.cusd{background:#1e3a8a;color:#93c5fd}
+.mwrap{display:flex;align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);overflow:hidden}
+.mwrap:focus-within{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1)}
+.mwrap .px{font-family:var(--mono);font-size:13px;color:rgba(255,255,255,.3);padding:0 10px;height:36px;display:flex;align-items:center;border-right:1px solid rgba(255,255,255,.1)}
+.mwrap input{border:none;background:transparent;color:#fff;font-family:var(--mono);font-size:16px;font-weight:500;padding:0 10px;height:36px;width:100%;outline:none}
+
+.cols{display:grid;grid-template-columns:300px 1fr;gap:16px}
+
+/* CARD */
+.card{background:var(--white);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;margin-bottom:14px}
+.chd{padding:11px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px}
+.chd-t{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3)}
+.pill{font-size:9px;font-weight:600;padding:2px 7px;border-radius:20px}
+.cbody{padding:13px 16px}
+
+.sep{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3);padding:8px 0 5px;display:flex;align-items:center;gap:8px}
+.sep::after{content:'';flex:1;height:1px;background:var(--line2)}
+
+.crow{display:flex;align-items:center;justify-content:space-between;padding:5px 0;gap:6px}
+.cn{flex:1;min-width:0}
+.cn span{display:block;font-size:12px;color:var(--ink2)}
+.cn small{display:block;font-size:10px;color:var(--ink3)}
+.cw{display:flex;align-items:center;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--bg);flex-shrink:0}
+.cw:focus-within{border-color:var(--blue);background:var(--white)}
+.cw .cp{font-family:var(--mono);font-size:10px;color:var(--ink3);background:var(--line2);padding:0 7px;height:28px;display:flex;align-items:center;border-right:1px solid var(--line);white-space:nowrap}
+.cw input{border:none;background:transparent;font-family:var(--mono);font-size:12px;color:var(--ink);padding:0 7px;height:28px;width:82px;text-align:right;outline:none}
+
+/* RATE CARD */
+.rtbl{width:100%;border-collapse:collapse}
+.rtbl th{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);padding:5px 8px 7px;border-bottom:1px solid var(--line2);text-align:left}
+.rtbl th:last-child{text-align:right}
+.rtbl td{padding:4px 8px;border-bottom:1px solid var(--line2);font-family:var(--mono);font-size:11px;color:var(--ink2)}
+.rtbl tr:last-child td{border-bottom:none}
+.rtbl td:last-child{text-align:right}
+.ri{border:1px solid var(--line);border-radius:3px;font-family:var(--mono);font-size:11px;width:66px;text-align:right;padding:2px 6px;background:var(--bg);color:var(--ink);outline:none}
+.ri:focus{border-color:var(--blue);background:var(--white)}
+
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.mbox{background:var(--white);border:1px solid var(--line);border-radius:var(--r2);padding:12px 14px}
+.ml{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin-bottom:3px}
+.mv{font-family:var(--mono);font-size:20px;font-weight:500;color:var(--ink)}
+.ms{font-size:10px;color:var(--ink3);margin-top:1px}
+.g{color:var(--green)}.a{color:var(--amber)}.r{color:var(--red)}
+
+/* SCENARIO TABS */
+.scn-tabs{display:flex;gap:4px;margin-bottom:0;padding:12px 16px 0;border-bottom:1px solid var(--line);background:var(--white)}
+.scn-tab{font-size:11px;font-weight:500;padding:6px 14px;border-radius:5px 5px 0 0;border:1px solid transparent;cursor:pointer;color:var(--ink3);background:transparent;position:relative;bottom:-1px}
+.scn-tab.active{background:var(--white);border-color:var(--line);border-bottom-color:var(--white);color:var(--ink);font-weight:600}
+.scn-tab:hover:not(.active){background:var(--line2);color:var(--ink2)}
+
+/* SHIPPER TABLE */
+.sh-table{width:100%;border-collapse:collapse;font-size:12px}
+.sh-table th{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;background:var(--line2)}
+.sh-table th:not(:first-child){text-align:right}
+.sh-table td{padding:5px 8px;border-bottom:1px solid var(--line2);vertical-align:middle}
+.sh-table tr:last-child td{border-bottom:none}
+.sh-table .sn{font-size:10px;font-weight:600;color:var(--ink3);text-align:left}
+.cbm-inp{border:1px solid var(--line);border-radius:4px;font-family:var(--mono);font-size:12px;width:70px;text-align:right;padding:3px 7px;background:var(--bg);color:var(--ink);outline:none}
+.cbm-inp:focus{border-color:var(--blue);background:var(--white)}
+.rate-badge{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--blue);text-align:right;padding-right:4px}
+.rev-cell{font-family:var(--mono);font-size:11px;text-align:right;color:var(--ink2)}
+
+/* SUMMARY STRIP */
+.summary-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:2px solid var(--ink);background:var(--white)}
+.sum-cell{padding:10px 12px;text-align:right;border-right:1px solid var(--line2)}
+.sum-cell:first-child{text-align:left}
+.sum-cell:last-child{border-right:none}
+.sum-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin-bottom:3px}
+.sum-val{font-family:var(--mono);font-size:16px;font-weight:500}
+
+/* MAIN TABLE */
+.twrap{overflow-x:auto}
+table.mt{width:100%;border-collapse:collapse}
+table.mt thead tr{background:var(--accent)}
+table.mt th{padding:9px 12px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.6);text-align:right;white-space:nowrap}
+table.mt th:first-child{text-align:left;min-width:130px}
+table.mt th .sub{display:block;font-weight:400;opacity:.5;font-size:8px;text-transform:none;letter-spacing:0;margin-top:1px}
+table.mt tbody tr{border-bottom:1px solid var(--line2)}
+table.mt tbody tr:last-child{border-bottom:none}
+table.mt tbody tr:hover td{background:var(--line2)}
+table.mt td{padding:7px 12px;font-family:var(--mono);font-size:11px;color:var(--ink2);text-align:right;white-space:nowrap}
+table.mt td:first-child{text-align:left;font-family:var(--sans);font-size:10px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em}
+.gv{font-weight:600}
+.fcol{background:var(--bbg)!important;color:var(--blue)!important;font-weight:500}
+.note{font-size:10px;color:var(--ink3);padding:9px 16px;border-top:1px solid var(--line2);line-height:1.6}
+
+@media(max-width:900px){.cols{grid-template-columns:1fr}.minputs{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Xhip<em>ment</em></div>
+  <div class="route">IN → US · LCL &amp; FCL Pricing</div>
+  <div class="sp"></div>
+  <div style="font-size:10px;color:rgba(255,255,255,.3)">Internal Tool</div>
+</header>
+
+<div class="page">
+
+  <!-- MARKET INPUTS -->
+  <div class="mbar">
+    <div class="mbar-lbl">Key market inputs — update for each sailing</div>
+    <div class="minputs">
+      <div class="mf">
+        <label>Ocean Freight / container <span class="cur cusd">USD</span></label>
+        <div class="mwrap"><span class="px">$</span><input type="number" id="of" value="1270" step="50" min="0" oninput="recalc()"></div>
+      </div>
+      <div class="mf">
+        <label>Drayage – nIXD <span class="cur cusd">USD</span></label>
+        <div class="mwrap"><span class="px">$</span><input type="number" id="dd-nixd" value="990" step="10" min="0" oninput="recalc()"></div>
+      </div>
+      <div class="mf">
+        <label>Drayage – AWD <span class="cur cusd">USD</span></label>
+        <div class="mwrap"><span class="px">$</span><input type="number" id="dd-awd" value="1190" step="10" min="0" oninput="recalc()"></div>
+      </div>
+      <div class="mf">
+        <label>USD–INR Exchange Rate</label>
+        <div class="mwrap"><span class="px">₹</span><input type="number" id="fx" value="91.4" step="0.01" min="70" oninput="recalc()"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- RATE CARDS (horizontal, two: nIXD + AWD) -->
+  <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:18px">
+    <div class="card">
+      <div class="chd">
+        <div class="chd-t">LCL sell rate card — nIXD</div>
+        <span class="pill" style="background:var(--bbg);color:var(--blue)">USD/CBM · editable</span>
+      </div>
+      <div style="padding:12px 16px">
+        <table class="rtbl" style="width:100%">
+          <thead><tr id="rate-head-nixd"></tr></thead>
+          <tbody><tr id="rate-tbody-nixd"></tr></tbody>
+        </table>
+      </div>
+      <div class="note">Rate auto-applied per shipper based on their individual CBM.</div>
+    </div>
+    <div class="card">
+      <div class="chd">
+        <div class="chd-t">LCL sell rate card — AWD</div>
+        <span class="pill" style="background:#f0fdf4;color:#166534">USD/CBM · editable</span>
+      </div>
+      <div style="padding:12px 16px">
+        <table class="rtbl" style="width:100%">
+          <thead><tr id="rate-head-awd"></tr></thead>
+          <tbody><tr id="rate-tbody-awd"></tr></tbody>
+        </table>
+      </div>
+      <div class="note" style="display:flex;align-items:center;gap:8px">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none">
+          <input type="checkbox" id="copy-nixd-to-awd" onchange="copyNIXDtoAWD(this.checked)"
+            style="width:14px;height:14px;accent-color:var(--blue);cursor:pointer">
+          <span style="font-size:10px;color:var(--ink3)">Copy nIXD rate card to AWD</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRICS (full width, aligned with rate cards) -->
+        <div class="metrics" style="grid-template-columns:repeat(4,1fr)">
+    <div class="mbox">
+      <div class="ml">FCL GM — nIXD</div>
+      <div class="mv" id="m-fcl-nixd">—</div>
+      <div class="ms" id="m-fcl-nixd-sub">—</div>
+    </div>
+    <div class="mbox">
+      <div class="ml">FCL GM — AWD</div>
+      <div class="mv" id="m-fcl-awd">—</div>
+      <div class="ms" id="m-fcl-awd-sub">—</div>
+    </div>
+    <div class="mbox">
+      <div class="ml">Avg LCL GM — nIXD</div>
+      <div class="mv" id="m-avg-nixd">—</div>
+      <div class="ms" id="m-avg-nixd-sub">—</div>
+    </div>
+    <div class="mbox">
+      <div class="ml">Avg LCL GM — AWD</div>
+      <div class="mv" id="m-avg-awd">—</div>
+      <div class="ms" id="m-avg-awd-sub">—</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:#fffbeb;border:1px solid #fcd34d;border-radius:var(--r2);margin-bottom:14px">
+    <span style="font-size:14px">⚠️</span>
+    <span style="font-size:11px;color:#92400e;font-weight:500">Note: Gross Margin figures above <strong>include 3% Amazon Commission</strong> deducted from Revenue before profit calculation (Revenue × 0.97 − COGS).</span>
+  </div>
+
+  <!-- FIXED COST INPUTS (horizontal, full width) -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="chd">
+      <div class="chd-t">Fixed cost inputs</div>
+      <span class="pill" style="background:var(--line2);color:var(--ink3)">per sailing · all costs in INR unless marked USD</span>
+    </div>
+    <div style="padding:12px 18px">
+      <div style="display:grid;grid-template-columns:repeat(9,1fr) 1.4fr;gap:0;align-items:end">
+
+        <!-- CFS -->
+        <div style="padding:0 10px 0 0;border-right:1px solid var(--line2)">
+          <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">CFS Handling</div>
+          <div style="font-size:9px;color:var(--ink3);margin-bottom:6px">Royal Cargo · <span style="background:#fef3c7;color:#92400e;padding:1px 4px;border-radius:2px;font-size:8px;font-weight:600">INR</span></div>
+          <div class="cw"><span class="cp">₹</span><input type="number" id="cfs" value="27500" step="500" min="0" oninput="recalc()" style="width:72px"></div>
+        </div>
+
+        <!-- THC -->
+        <div style="padding:0 10px;border-right:1px solid var(--line2)">
+          <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">THC – Liner Origin</div>
+          <div style="font-size:9px;color:var(--ink3);margin-bottom:6px">One Line · <span style="background:#fef3c7;color:#92400e;padding:1px 4px;border-radius:2px;font-size:8px;font-weight:600">INR</span></div>
+          <div class="cw"><span class="cp">₹</span><input type="number" id="thc" value="22700" step="500" min="0" oninput="recalc()" style="width:72px"></div>
+        </div>
+
+        <!-- BL Fees -->
+        <div style="padding:0 10px;border-right:1px solid var(--line2)">
+          <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">BL Fees</div>
+          <div style="font-size:9px;color:var(--ink3);margin-bottom:6px">One Line · <span style="background:#fef3c7;color:#92400e;padding:1px 4px;border-radius:2px;font-size:8px;font-weight:600">INR</span></div>
+          <div class="cw"><span class="cp">₹</span><input type="number" id="bl" value="4000" step="200" min="0" oninput="recalc()" style="width:72px"></div>
+        </div>
+
+        <!-- Unloading -->
+        <div style="padding:0 10px;border-right:1px solid var(--line2)">
+          <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">Unloading</div>
+          <div style="font-size:9px;color:var(--ink3);margin-bottom:6px">per shipper · <span style="background:#fef3c7;color:#92400e;padding:1px 4px;border-radius:2px;font-size:8px;font-weight:600">INR</span></div>
+          <div class="cw"><span class="cp">₹</span><input type="number" id="unload" value="500" step="50" min="0" oninput="recalc()" style="width:72px"></div>
+        </div>
+
+        <!-- AMS -->
+        <div style="padding:0 10px;border-right:1px solid var(--line2)">
+          <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">AMS + HBL + ISF</div>
+          <div style="font-size:9px;color:var(--ink3);margin-bottom:6px">per shipper · <span style="background:#fef3c7;color:#92400e;padding:1px 4px;border-radius:2px;font-size:8px;font-weight:600">INR</span></div>
+          <div class="cw"><span class="cp">₹</span><input type="number" id="ams" value="300" step="50" min="0" oninput="recalc()" style="width:72px"></div>
+        </div>
+
+        <!-- Export Clearance -->
+        <div style="padding:0 10px;border-right:1px solid var(--line2)">
+          <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">Export Clearance</div>
+          <div style="font-size:9px;color:var(--ink3);margin-bottom:6px">per shipper · <span style="background:#fef3c7;color:#92400e;padding:1px 4px;border-radius:2px;font-size:8px;font-weight:600">INR</span></div>
+          <div class="cw"><span class="cp">₹</span><input type="number" id="exclr" value="2000" step="100" min="0" oninput="recalc()" style="width:72px"></div>
+        </div>
+
+        <!-- Open Examination -->
+        <div style="padding:0 10px;border-right:1px solid var(--line2)">
+          <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">Open Examination</div>
+          <div style="font-size:9px;color:var(--ink3);margin-bottom:6px">per shipper · <span style="background:#fef3c7;color:#92400e;padding:1px 4px;border-radius:2px;font-size:8px;font-weight:600">INR</span></div>
+          <div class="cw"><span class="cp">₹</span><input type="number" id="openex" value="500" step="100" min="0" oninput="recalc()" style="width:72px"></div>
+        </div>
+
+        <!-- Import Clearance -->
+        <div style="padding:0 10px;border-right:1px solid var(--line2)">
+          <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">Import Clearance</div>
+          <div style="font-size:9px;color:var(--ink3);margin-bottom:6px">per shipper · <span style="background:#dbeafe;color:#1e40af;padding:1px 4px;border-radius:2px;font-size:8px;font-weight:600">USD</span></div>
+          <div class="cw"><span class="cp">$</span><input type="number" id="ic" value="65" step="5" min="0" oninput="recalc()" style="width:72px"></div>
+        </div>
+
+        <!-- FCL sell nIXD -->
+        <div style="padding:0 10px;border-right:1px solid var(--line2)">
+          <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">FCL Sell — nIXD</div>
+          <div style="font-size:9px;color:var(--ink3);margin-bottom:6px" id="fcl-nixd-label">auto-calculated</div>
+          <div class="cw" style="opacity:.65"><span class="cp">$</span><input type="number" id="fcl-sell-nixd" value="" readonly style="color:var(--ink3);width:72px"></div>
+        </div>
+
+        <!-- FCL sell AWD -->
+        <div style="padding:0 0 0 10px">
+          <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">FCL Sell — AWD</div>
+          <div style="font-size:9px;color:var(--ink3);margin-bottom:6px" id="fcl-awd-label">auto-calculated</div>
+          <div class="cw" style="opacity:.65"><span class="cp">$</span><input type="number" id="fcl-sell-awd" value="" readonly style="color:var(--ink3);width:72px"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENARIO TABLE (full width) -->
+  <div class="card" style="padding:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--line)">
+          <div class="chd-t">LCL scenarios — per-shipper CBM input</div>
+          <span class="pill" style="background:var(--gbg);color:var(--green)">Edit any CBM to recalculate instantly</span>
+        </div>
+        <div class="scn-tabs" id="scn-tabs"></div>
+        <!-- mode toggle removed: both nIXD & AWD shown in summary table -->
+
+        <div id="scn-panel" style="padding:0">
+          <!-- shipper table injected here -->
+        </div>
+
+        <div style="padding:10px 16px 14px;border-top:1px solid var(--line)">
+      <div class="card" style="padding:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--line)">
+          <div class="chd-t">LCL scenarios — per-shipper CBM input</div>
+          <span class="pill" style="background:var(--gbg);color:var(--green)">Edit any CBM to recalculate instantly</span>
+        </div>
+        <div class="scn-tabs" id="scn-tabs"></div>
+        <!-- mode toggle removed: both nIXD & AWD shown in summary table -->
+
+        <div id="scn-panel" style="padding:0">
+          <!-- shipper table injected here -->
+        </div>
+
+        <div style="padding:10px 16px 14px;border-top:1px solid var(--line)">
+          <table class="mt">
+            <thead>
+              <tr id="tbl-head"></tr>
+              <tr id="tbl-subhead" style="background:#1a3a6e"></tr>
+            </thead>
+            <tbody id="summary-body"></tbody>
+          </table>
+        </div>
+        <div class="note">
+          Cost formula (Excel C5): (CFS+THC+BL) + OF×FX + (Unload+AMS+Export+OpenExam)×n + IC×n×FX + DD×FX + FX&nbsp;&nbsp;
+          Profit = Revenue × 0.97 − Cost &nbsp;&nbsp;
+          <span style="color:var(--green);font-weight:600">■</span> ≥12%&nbsp;
+          <span style="color:var(--amber);font-weight:600">■</span> 7–12%&nbsp;
+          <span style="color:var(--red);font-weight:600">■</span> &lt;7%
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── RATE CARDS ──
+const BRACKET_LABELS = ['≤ 2 CBM','2 – 5','5 – 10','10 – 15','15 – 20','20 – 25','25 – 40','40 – 50','50 – 60','> 60'];
+const BRACKET_UPPER  = [2, 5, 10, 15, 20, 25, 40, 50, 60, 999];
+
+// nIXD rates (from NS - nIXD Jan tab)
+let ratesNIXD = [165, 110, 90, 85, 78, 73, 67, 67, 67, 65];
+// AWD rates (from NS - AWD Jan tab)
+let ratesAWD  = [165, 110, 95, 90, 83, 78, 72, 72, 72, 70];
+
+// ── 5 SCENARIO PRESETS (editable per-shipper CBMs) ──
+// Uses exact Excel shippers for scenario 1, realistic distributions for others
+const PRESETS = [
+  { label:'3 shippers',  cbms:[20.5, 26.0, 15.2] },                                               // exact Excel tab shippers
+  { label:'5 shippers',  cbms:[15.6, 8.2, 18.7, 4.7, 14.8] },                                     // random, 2–50 CBM, total 62
+  { label:'7 shippers',  cbms:[13.4, 12.7, 4.2, 3.1, 4.6, 20.2, 3.8] },                           // random, 2–50 CBM, total 62
+  { label:'10 shippers', cbms:[8.1, 5.0, 2.9, 6.0, 3.1, 18.0, 4.3, 6.2, 3.6, 4.8] },             // random, 2–50 CBM, total 62
+  { label:'12 shippers', cbms:[3.3, 2.7, 10.0, 5.6, 2.2, 7.3, 4.1, 4.4, 5.2, 5.4, 2.9, 8.9] },  // random, 2–50 CBM, total 62
+];
+
+// Deep-copy presets into working state
+let scenarios = PRESETS.map(p => ({ label:p.label, cbms:[...p.cbms] }));
+let activeScn = 0;
+
+const g = id => +document.getElementById(id).value;
+
+function getSellRate(cbm, rateArr) {
+  for (let i = 0; i < BRACKET_UPPER.length; i++)
+    if (cbm <= BRACKET_UPPER[i]) return rateArr[i];
+  return rateArr[rateArr.length - 1];
+}
+
+// ── EXACT EXCEL FORMULA ──
+// C5 = (CFS+THC+BL) + OF×FX + (Unload+AMS+Export+OpenExam)×n + IC×n×FX + DD×FX + FX
+// C8 = Revenue×0.97 − AccessorialMargin − Cost
+// C9 = Profit / Revenue
+function computeCost(n, mode) {
+  const fx   = g('fx');
+  const ddId = mode === 'awd' ? 'dd-awd' : 'dd-nixd';
+  return (g('cfs') + g('thc') + g('bl'))
+       + g('of') * fx
+       + (g('unload') + g('ams') + g('exclr') + g('openex')) * n
+       + g('ic') * n * fx
+       + g(ddId) * fx
+       + fx;
+}
+
+function computeScenario(cbms, mode) {
+  // mode: 'nixd' or 'awd'
+  const fx      = g('fx');
+  const n       = cbms.length;
+  const rateArr = mode === 'awd' ? ratesAWD : ratesNIXD;
+  const costINR = computeCost(n, mode);
+  const revINR  = cbms.reduce((s, cbm) => s + cbm * getSellRate(cbm, rateArr) * fx, 0);
+  const profit  = revINR * 0.97 - costINR;
+  const gm      = profit / revINR;
+  return { n, costINR, revINR, profit, gm };
+}
+
+// ── FCL FORMULA (two modes: nIXD and AWD) ──
+function computeFCL(mode) {
+  const fx      = g('fx');
+  const rateArr = mode === 'awd' ? ratesAWD : ratesNIXD;
+  const ddId    = mode === 'awd' ? 'dd-awd' : 'dd-nixd';
+  const cogsUSD = (g('cfs') + g('thc') + g('bl') + g('unload') + g('ams') + g('exclr')) / fx
+                + g('of') + g('ic') + g(ddId);
+  const fclRate = rateArr[rateArr.length - 1]; // >60 CBM bracket
+  const revUSD  = fclRate * 64;                // full 40ft HC = 64 CBM
+  const profit  = revUSD * 0.97 - cogsUSD;
+  const gm      = profit / revUSD;
+  return { cogsUSD, revUSD, profit, gm };
+}
+
+const gmCls = v => v >= 0.12 ? 'g' : v >= 0.07 ? 'a' : 'r';
+const fmt   = n => Math.round(n).toLocaleString('en-IN');
+const pct   = v => (v * 100).toFixed(2) + '%';
+
+// ── COPY nIXD → AWD ──
+function copyNIXDtoAWD(checked) {
+  if (checked) {
+    ratesAWD = [...ratesNIXD];
+    // Update AWD inputs in-place without rebuilding the table
+    document.querySelectorAll('#rate-tbody-awd input.ri').forEach((inp, i) => {
+      inp.value = ratesAWD[i];
+    });
+    recalc();
+  }
+}
+
+// When nIXD rates change, auto-sync AWD input in-place if checkbox is ticked
+function onNIXDRateChange(i, val) {
+  ratesNIXD[i] = val;
+  if (document.getElementById('copy-nixd-to-awd').checked) {
+    ratesAWD[i] = val;
+    // Update the corresponding AWD input value in-place
+    const awdInputs = document.querySelectorAll('#rate-tbody-awd input.ri');
+    if (awdInputs[i]) awdInputs[i].value = val;
+  }
+  recalc();
+}
+
+// ── RATE CARDS (horizontal, nIXD + AWD) ──
+function buildRateCard() {
+  const heads = BRACKET_LABELS.map(l => `<th style="text-align:center;min-width:62px;font-size:9px">${l}</th>`).join('');
+  document.getElementById('rate-head-nixd').innerHTML = heads;
+  document.getElementById('rate-head-awd').innerHTML  = heads;
+
+  document.getElementById('rate-tbody-nixd').innerHTML =
+    BRACKET_LABELS.map((_, i) => `
+      <td style="text-align:center;padding:3px 4px">
+        <div style="font-size:9px;color:var(--ink3);margin-bottom:2px">$</div>
+        <input class="ri" type="number" min="0" step="1" value="${ratesNIXD[i]}"
+          data-i="${i}" oninput="onNIXDRateChange(+this.dataset.i, +this.value)"
+          style="width:54px;text-align:center">
+      </td>`).join('');
+
+  document.getElementById('rate-tbody-awd').innerHTML =
+    BRACKET_LABELS.map((_, i) => `
+      <td style="text-align:center;padding:3px 4px">
+        <div style="font-size:9px;color:var(--ink3);margin-bottom:2px">$</div>
+        <input class="ri" type="number" min="0" step="1" value="${ratesAWD[i]}"
+          data-i="${i}" oninput="ratesAWD[+this.dataset.i]=+this.value;recalc()"
+          style="width:54px;text-align:center">
+      </td>`).join('');
+}
+
+// ── SCENARIO TABS ──
+function buildTabs() {
+  document.getElementById('scn-tabs').innerHTML = scenarios.map((s, i) => `
+    <button class="scn-tab${i===activeScn?' active':''}" onclick="switchTab(${i})">${s.label}</button>
+  `).join('') + `<button class="scn-tab" onclick="resetScn()" style="margin-left:auto;font-size:10px;color:var(--ink3)">↺ Reset</button>`;
+}
+
+function switchTab(i) {
+  activeScn = i;
+  buildTabs();
+  buildShipperTable();
+  recalc();
+}
+
+function resetScn() {
+  scenarios[activeScn].cbms = [...PRESETS[activeScn].cbms];
+  buildShipperTable();
+  recalc();
+}
+
+// ── SHIPPER TABLE ──
+function buildShipperTable() {
+  const scn = scenarios[activeScn];
+  const fx  = g('fx');
+  const rows = scn.cbms.map((cbm, i) => {
+    const r   = getSellRate(cbm, ratesNIXD);
+    const rev = cbm * r * fx;
+    return `<tr>
+      <td class="sn">Shipper ${i+1}</td>
+      <td style="text-align:right">
+        <input class="cbm-inp" type="number" min="0.1" step="0.1" value="${cbm}"
+          data-i="${i}" oninput="updateCBM(${i},+this.value)">
+      </td>
+      <td class="rate-badge" style="color:var(--blue)">$${r}</td>
+      <td class="rev-cell">₹${fmt(rev)}</td>
+    </tr>`;
+  }).join('');
+
+  const total_cbm = scn.cbms.reduce((s,c)=>s+c,0);
+  const result    = computeScenario(scn.cbms, 'nixd');
+
+  document.getElementById('scn-panel').innerHTML = `
+    <table class="sh-table" style="margin:0">
+      <thead><tr>
+        <th>Shipper</th>
+        <th style="text-align:right">CBM</th>
+        <th style="text-align:right">Rate ($/CBM)</th>
+        <th style="text-align:right">Revenue (INR)</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+      <tfoot><tr style="background:var(--line2);font-weight:600">
+        <td style="font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em">Total</td>
+        <td style="font-family:var(--mono);font-size:12px;text-align:right">${total_cbm.toFixed(1)} CBM</td>
+        <td></td>
+        <td style="font-family:var(--mono);font-size:12px;text-align:right">₹${fmt(result.revINR)}</td>
+      </tr></tfoot>
+    </table>`;
+}
+
+function updateCBM(idx, val) {
+  scenarios[activeScn].cbms[idx] = val;
+  buildShipperTable();
+  recalc();
+}
+
+// ── SUMMARY TABLE (all 5 scenarios: nIXD + AWD + FCL) ──
+function buildSummary() {
+  const fclN = computeFCL('nixd');
+  const fclA = computeFCL('awd');
+  const resN = scenarios.map(s => computeScenario(s.cbms, 'nixd'));
+  const resA = scenarios.map(s => computeScenario(s.cbms, 'awd'));
+
+  // Update thead
+  document.getElementById('tbl-head').innerHTML =
+    `<th></th>
+     <th colspan="${scenarios.length}" style="text-align:center;border-right:2px solid rgba(255,255,255,.2)">nIXD</th>
+     <th colspan="${scenarios.length}" style="text-align:center;border-right:2px solid rgba(255,255,255,.2)">AWD</th>
+     <th style="background:#252841">FCL</th>`;
+
+  // Sub-header row
+  const subHdr = scenarios.map((s,i) =>
+    `<th>${s.label}<span class="sub">${s.cbms.length} shippers</span></th>`).join('');
+  document.getElementById('tbl-subhead').innerHTML =
+    `<th></th>${subHdr}${subHdr}<th style="background:#252841"></th>`;
+
+  const rows = [
+    {
+      label: 'Gross margin',
+      valsN: resN.map(r => `<span class="gv ${gmCls(r.gm)}">${pct(r.gm)}</span>`),
+      valsA: resA.map(r => `<span class="gv ${gmCls(r.gm)}">${pct(r.gm)}</span>`),
+      fcl:   `<span class="gv ${gmCls(fclN.gm)}">${pct(fclN.gm)}</span> / <span class="gv ${gmCls(fclA.gm)}">${pct(fclA.gm)}</span>`,
+    },
+    {
+      label: 'Revenue (INR)',
+      valsN: resN.map(r => `₹${fmt(r.revINR)}`),
+      valsA: resA.map(r => `₹${fmt(r.revINR)}`),
+      fcl:   `$${fmt(fclN.revUSD)}/$${fmt(fclA.revUSD)}`,
+    },
+    {
+      label: 'Cost (INR)',
+      valsN: resN.map(r => `₹${fmt(r.costINR)}`),
+      valsA: resA.map(r => `₹${fmt(r.costINR)}`),
+      fcl:   `$${fclN.cogsUSD.toFixed(0)}/$${fclA.cogsUSD.toFixed(0)}`,
+    },
+    {
+      label: 'Profit (INR)',
+      valsN: resN.map(r => `<span class="${r.profit>=0?'g':'r'}">₹${fmt(r.profit)}</span>`),
+      valsA: resA.map(r => `<span class="${r.profit>=0?'g':'r'}">₹${fmt(r.profit)}</span>`),
+      fcl:   `<span class="${fclN.profit>=0?'g':'r'}">$${Math.round(fclN.profit)}</span>`,
+    },
+  ];
+
+  document.getElementById('summary-body').innerHTML = rows.map(row => `
+    <tr>
+      <td>${row.label}</td>
+      ${row.valsN.map((v,i) => `<td style="${i===activeScn?'background:#f0f9ff':''}">${v}</td>`).join('')}
+      ${row.valsA.map((v,i) => `<td style="${i===activeScn?'background:#f0f9ff':''}">${v}</td>`).join('')}
+      <td class="fcol">${row.fcl}</td>
+    </tr>`).join('');
+}
+
+// ── METRICS ──
+function updateMetrics() {
+  const fclN = computeFCL('nixd');
+  const fclA = computeFCL('awd');
+
+  // Update both FCL sell price fields
+  const rateN60 = ratesNIXD[ratesNIXD.length - 1];
+  const rateA60 = ratesAWD[ratesAWD.length - 1];
+  document.getElementById('fcl-sell-nixd').value = rateN60 * 64;
+  document.getElementById('fcl-nixd-label').textContent = `$${rateN60}×64 =`;
+  document.getElementById('fcl-sell-awd').value = rateA60 * 64;
+  document.getElementById('fcl-awd-label').textContent = `$${rateA60}×64 =`;
+
+  const fclNEl = document.getElementById('m-fcl-nixd');
+  fclNEl.textContent = pct(fclN.gm);
+  fclNEl.className   = 'mv ' + gmCls(fclN.gm);
+  document.getElementById('m-fcl-nixd-sub').textContent =
+    `Absolute GM = $${Math.round(fclN.revUSD * 0.97 - fclN.cogsUSD).toLocaleString()}`;
+
+  const fclAEl = document.getElementById('m-fcl-awd');
+  fclAEl.textContent = pct(fclA.gm);
+  fclAEl.className   = 'mv ' + gmCls(fclA.gm);
+  document.getElementById('m-fcl-awd-sub').textContent =
+    `Absolute GM = $${Math.round(fclA.revUSD * 0.97 - fclA.cogsUSD).toLocaleString()}`;
+
+  const nixdScns = scenarios.map(s => computeScenario(s.cbms, 'nixd'));
+  const awdScns  = scenarios.map(s => computeScenario(s.cbms, 'awd'));
+  const avgN = nixdScns.reduce((a,r)=>a+r.gm,0) / scenarios.length;
+  const avgA = awdScns.reduce((a,r)=>a+r.gm,0)  / scenarios.length;
+  const fx = g('fx');
+  const avgNAbsUSD = nixdScns.reduce((a,r)=>a+r.profit,0) / scenarios.length / fx;
+  const avgAAbsUSD = awdScns.reduce((a,r)=>a+r.profit,0)  / scenarios.length / fx;
+
+  const avgNEl = document.getElementById('m-avg-nixd');
+  avgNEl.textContent = pct(avgN);
+  avgNEl.className   = 'mv ' + gmCls(avgN);
+  document.getElementById('m-avg-nixd-sub').textContent =
+    `Absolute GM = $${Math.round(avgNAbsUSD).toLocaleString()}`;
+
+  const avgAEl = document.getElementById('m-avg-awd');
+  avgAEl.textContent = pct(avgA);
+  avgAEl.className   = 'mv ' + gmCls(avgA);
+  document.getElementById('m-avg-awd-sub').textContent =
+    `Absolute GM = $${Math.round(avgAAbsUSD).toLocaleString()}`;
+}
+
+function recalc() {
+  buildShipperTable();
+  buildSummary();
+  updateMetrics();
+}
+
+// ── INIT ──
+buildRateCard();
+buildTabs();
+recalc();
+</script>
+</body>
+</html>
