@@ -141,15 +141,15 @@ table.mt td:first-child{text-align:left;font-family:var(--sans);font-size:10px;f
     <div class="minputs">
       <div class="mf">
         <label>Ocean Freight / container <span class="cur cusd">USD</span></label>
-        <div class="mwrap"><span class="px">$</span><input type="number" id="of" value="1270" step="50" min="0" oninput="recalc()"></div>
+        <div class="mwrap"><span class="px">$</span><input type="number" id="of" value="2900" step="50" min="0" oninput="recalc()"></div>
       </div>
       <div class="mf">
         <label>Drayage – nIXD <span class="cur cusd">USD</span></label>
-        <div class="mwrap"><span class="px">$</span><input type="number" id="dd-nixd" value="990" step="10" min="0" oninput="recalc()"></div>
+        <div class="mwrap"><span class="px">$</span><input type="number" id="dd-nixd" value="1062" step="10" min="0" oninput="recalc()"></div>
       </div>
       <div class="mf">
         <label>Drayage – AWD <span class="cur cusd">USD</span></label>
-        <div class="mwrap"><span class="px">$</span><input type="number" id="dd-awd" value="1190" step="10" min="0" oninput="recalc()"></div>
+        <div class="mwrap"><span class="px">$</span><input type="number" id="dd-awd" value="1290" step="10" min="0" oninput="recalc()"></div>
       </div>
       <div class="mf">
         <label>USD–INR Exchange Rate</label>
@@ -359,9 +359,9 @@ const BRACKET_LABELS = ['≤ 2 CBM','2 – 5','5 – 10','10 – 15','15 – 20'
 const BRACKET_UPPER  = [2, 5, 10, 15, 20, 25, 40, 50, 60, 999];
 
 // nIXD rates (from NS - nIXD Jan tab)
-let ratesNIXD = [165, 110, 90, 85, 78, 73, 67, 67, 67, 65];
+let ratesNIXD = [150, 120, 110, 105, 95, 90, 85, 85, 85, 80];
 // AWD rates (from NS - AWD Jan tab)
-let ratesAWD  = [165, 110, 95, 90, 83, 78, 72, 72, 72, 70];
+let ratesAWD  = [150, 120, 110, 105, 95, 90, 85, 85, 85, 80];
 
 // ── 5 SCENARIO PRESETS (editable per-shipper CBMs) ──
 // Uses exact Excel shippers for scenario 1, realistic distributions for others
