@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Xhipment · IN→US Pricing</title>
+<title>Xhipment · IN→US Pricing + Optimizer</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -130,7 +130,7 @@ table.mt td:first-child{text-align:left;font-family:var(--sans);font-size:10px;f
   <div class="logo">Xhip<em>ment</em></div>
   <div class="route">IN → US · LCL &amp; FCL Pricing</div>
   <div class="sp"></div>
-  <div style="font-size:10px;color:rgba(255,255,255,.3)">Internal Tool</div>
+  <div style="font-size:10px;color:rgba(255,255,255,.3)">Internal Tool &nbsp;<span style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:1px 8px;font-size:9px;letter-spacing:.04em;color:rgba(255,255,255,.5)">+ Optimizer</span></div>
 </header>
 
 <div class="page">
@@ -161,6 +161,44 @@ table.mt td:first-child{text-align:left;font-family:var(--sans);font-size:10px;f
 
   <!-- RATE CARDS (horizontal, two: nIXD + AWD) -->
   <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:18px">
+  <!-- OPTIMIZER CARD -->
+  <div class="card" style="margin-bottom:12px;border:1.5px solid #e0e3ee">
+    <div class="chd" style="background:#f7f8fb">
+      <div class="chd-t">⚡ Rate Card Optimizer</div>
+      <span class="pill" style="background:#edfaf4;color:#0a8a5c">Finds monotonically decreasing rates to hit target GM</span>
+    </div>
+    <div style="padding:14px 18px">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr) auto;gap:12px;align-items:end">
+
+        <div>
+          <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Target GM — LCL nIXD</div>
+          <div class="cw"><span class="cp">%</span><input type="number" id="opt-gm-lcl-nixd" value="15" step="0.5" min="0" max="50" style="width:72px"></div>
+        </div>
+
+        <div>
+          <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Target GM — LCL AWD</div>
+          <div class="cw"><span class="cp">%</span><input type="number" id="opt-gm-lcl-awd" value="15" step="0.5" min="0" max="50" style="width:72px"></div>
+        </div>
+
+        <div>
+          <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Target GM — FCL nIXD</div>
+          <div class="cw"><span class="cp">%</span><input type="number" id="opt-gm-fcl-nixd" value="15" step="0.5" min="0" max="50" style="width:72px"></div>
+        </div>
+
+        <div>
+          <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Target GM — FCL AWD</div>
+          <div class="cw"><span class="cp">%</span><input type="number" id="opt-gm-fcl-awd" value="15" step="0.5" min="0" max="50" style="width:72px"></div>
+        </div>
+
+        <button onclick="runOptimizer()"
+          style="height:36px;padding:0 24px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;letter-spacing:.01em">
+          ⚡ Optimize Rates
+        </button>
+
+      </div>
+      <div id="opt-status" style="margin-top:10px;font-size:11px;color:var(--ink3);display:none"></div>
+    </div>
+  </div>
     <div class="card">
       <div class="chd">
         <div class="chd-t">LCL sell rate card — nIXD</div>
@@ -656,6 +694,164 @@ function recalc() {
 buildRateCard();
 buildTabs();
 recalc();
+
+
+// ══════════════════════════════════════════════════════════
+// RATE CARD OPTIMIZER
+// ══════════════════════════════════════════════════════════
+//
+// APPROACH:
+// For each mode (nixd/awd), we need to find slab rates [r1..r9]
+// (slabs 2..10, slab 1 fixed at $150) such that:
+//   1. Monotonically DECREASING: r[i] <= r[i-1]  (larger CBM = cheaper rate)
+//   2. Target GM is achieved across all 5 LCL scenarios (avg)
+//   3. Rates are rounded to whole dollars
+//
+// Strategy:
+//   - For each scenario, compute the required avg $/CBM to hit target GM
+//   - Use a binary search on a "base rate" multiplier that scales all slabs
+//     proportionally while maintaining the monotone shape of the original
+//     rate card, then enforce monotonicity.
+//   - For FCL: solve directly since FCL rev = rate[last] * 64
+
+function computeRequiredRevINR(costINR, targetGM) {
+  // Profit = Rev * 0.97 - Cost  →  Rev = Cost / (0.97 * (1 - targetGM))
+  return costINR / (0.97 * (1 - targetGM));
+}
+
+function enforceMonotone(rates) {
+  // Ensure rates are non-increasing (larger CBM bracket = lower or equal rate)
+  // Walk left-to-right, cap each rate at the previous
+  const r = [...rates];
+  for (let i = 1; i < r.length; i++) {
+    if (r[i] > r[i-1]) r[i] = r[i-1];
+  }
+  return r;
+}
+
+function optimizeRateCard(mode, targetLCLgm, targetFCLgm) {
+  const fx = g('fx');
+
+  // Fixed costs for each scenario count
+  function cost(n) { return computeCost(n, mode); }
+
+  // Starting shape: current rate card (slabs 0..9)
+  // Slab 0 (<=2 CBM) is FIXED at 150
+  const baseRates = mode === 'awd' ? [...ratesAWD] : [...ratesNIXD];
+  const FIXED_SLAB0 = 150;
+
+  // ── STEP 1: Find the uniform scale factor that hits target LCL GM on average ──
+  // We'll scale slabs 1..9 proportionally, keeping slab 0 = 150
+  // Then enforce monotonicity
+
+  function avgGMAtScale(scale) {
+    // Build scaled rates
+    const scaled = [FIXED_SLAB0, ...baseRates.slice(1).map(r => r * scale)];
+    const monotone = [FIXED_SLAB0, ...enforceMonotone(scaled.slice(1))];
+
+    let totalGM = 0;
+    for (const scn of scenarios) {
+      const n = scn.cbms.length;
+      const c = cost(n);
+      const rev = scn.cbms.reduce((s, cbm) => {
+        // Find rate for this CBM
+        let rate = monotone[monotone.length - 1];
+        for (let i = 0; i < BRACKET_UPPER.length; i++) {
+          if (cbm <= BRACKET_UPPER[i]) { rate = monotone[i]; break; }
+        }
+        return s + cbm * rate * fx;
+      }, 0);
+      const profit = rev * 0.97 - c;
+      totalGM += profit / rev;
+    }
+    return totalGM / scenarios.length;
+  }
+
+  // Binary search for scale that gives target LCL GM
+  let lo = 0.1, hi = 10.0;
+  for (let iter = 0; iter < 60; iter++) {
+    const mid = (lo + hi) / 2;
+    if (avgGMAtScale(mid) < targetLCLgm) lo = mid;
+    else hi = mid;
+  }
+  const lcl_scale = (lo + hi) / 2;
+
+  // Build final LCL rates
+  const scaledLCL = [FIXED_SLAB0, ...baseRates.slice(1).map(r => r * lcl_scale)];
+  const lcl_rates_raw = [FIXED_SLAB0, ...enforceMonotone(scaledLCL.slice(1))];
+  // Round to whole dollars, re-enforce monotonicity after rounding
+  let lcl_rates = lcl_rates_raw.map(r => Math.round(r));
+  lcl_rates = [FIXED_SLAB0, ...enforceMonotone(lcl_rates.slice(1))];
+
+  // ── STEP 2: Solve FCL rate (slab >60 CBM, index 9) ──
+  // FCL COGS (USD): same formula
+  const ofId  = mode === 'awd' ? 'of-awd' : 'of-nixd';
+  // Use single 'of' input (shared)
+  const ddId  = mode === 'awd' ? 'dd-awd' : 'dd-nixd';
+  const fclCogsUSD = (g('cfs') + g('thc') + g('bl') + g('unload') + g('ams') + g('exclr')) / fx
+                   + g('of') + g('ic') + g(ddId);
+  // FCL rev = rate * 64, profit = rev*0.97 - cogsUSD
+  // target: profit/rev = targetFCLgm → rev*(0.97 - targetFCLgm) = cogsUSD → rev = cogsUSD/(0.97-targetFCLgm)
+  const fclRevUSD = fclCogsUSD / (0.97 - targetFCLgm);
+  const fclRateRaw = fclRevUSD / 64;
+  const fclRate = Math.round(fclRateRaw);
+
+  // Set slab 9 (>60) to FCL rate, but cap at slab 8 rate to maintain monotonicity
+  lcl_rates[9] = Math.min(fclRate, lcl_rates[8]);
+
+  return { lcl_rates, fclRate, lcl_scale };
+}
+
+function runOptimizer() {
+  const targetLCLnixd = +document.getElementById('opt-gm-lcl-nixd').value / 100;
+  const targetLCLawd  = +document.getElementById('opt-gm-lcl-awd').value  / 100;
+  const targetFCLnixd = +document.getElementById('opt-gm-fcl-nixd').value / 100;
+  const targetFCLawd  = +document.getElementById('opt-gm-fcl-awd').value  / 100;
+
+  const statusEl = document.getElementById('opt-status');
+  statusEl.style.display = 'block';
+  statusEl.style.color = 'var(--ink3)';
+  statusEl.textContent = 'Optimizing...';
+
+  try {
+    // Optimize nIXD
+    const nixd = optimizeRateCard('nixd', targetLCLnixd, targetFCLnixd);
+    ratesNIXD = nixd.lcl_rates;
+
+    // Optimize AWD
+    const awd = optimizeRateCard('awd', targetLCLawd, targetFCLawd);
+    ratesAWD = awd.lcl_rates;
+
+    // If copy checkbox is ticked, sync AWD from nIXD instead
+    if (document.getElementById('copy-nixd-to-awd').checked) {
+      ratesAWD = [...ratesNIXD];
+    }
+
+    // Rebuild rate card inputs with new values
+    buildRateCard();
+    recalc();
+
+    // Show results
+    const avgN = scenarios.map(s => computeScenario(s.cbms, 'nixd').gm).reduce((a,b)=>a+b,0)/scenarios.length;
+    const avgA = scenarios.map(s => computeScenario(s.cbms, 'awd').gm).reduce((a,b)=>a+b,0)/scenarios.length;
+    const fclN = computeFCL('nixd');
+    const fclA = computeFCL('awd');
+
+    statusEl.style.color = 'var(--green)';
+    statusEl.innerHTML = `
+      ✓ Optimization complete &nbsp;|&nbsp;
+      <strong>nIXD LCL avg GM: ${pct(avgN)}</strong> (target: ${(targetLCLnixd*100).toFixed(1)}%) &nbsp;·&nbsp;
+      <strong>AWD LCL avg GM: ${pct(avgA)}</strong> (target: ${(targetLCLawd*100).toFixed(1)}%) &nbsp;|&nbsp;
+      <strong>nIXD FCL: ${pct(fclN.gm)}</strong> (target: ${(targetFCLnixd*100).toFixed(1)}%) &nbsp;·&nbsp;
+      <strong>AWD FCL: ${pct(fclA.gm)}</strong> (target: ${(targetFCLawd*100).toFixed(1)}%)
+      &nbsp;<span style="color:var(--ink3);font-weight:400">— Adjust any rate in the cards above to fine-tune.</span>`;
+
+  } catch(e) {
+    statusEl.style.color = 'var(--red)';
+    statusEl.textContent = 'Optimization failed: ' + e.message;
+  }
+}
+
 </script>
 </body>
 </html>
